@@ -1,9 +1,9 @@
 from flask import Flask, jsonify
 from flask_jwt_extended import JWTManager
 from flask_restful import Resource, Api
-from flask.src.extentions import bcrypt, db, ma
+from src.extentions import bcrypt, db, ma
 from flask_cors import CORS
-from flask.src.blacklist import BLACKLIST
+from src.blacklist import BLACKLIST
 
 def create_App():
     app = Flask(__name__)
