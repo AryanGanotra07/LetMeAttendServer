@@ -15,13 +15,13 @@ def create_App():
 
     @jwt.user_claims_loader
     def add_claims_to_jwt(identity):
-        # from .models.UserModel import UserModel
-        # user = UserModel.find_by_id(identity)
-        # if user.isAdmin:
-        #     print("returned is admin as true")
-        #     return {'isAdmin' : True}
-        # print("returned is admin as false")
-        # return {'isAdmin' : False}
+        from .models.UserModel import UserModel
+        user = UserModel.find_by_id(identity)
+        if user.isAdmin:
+            print("returned is admin as true")
+            return {'isAdmin' : True}
+        print("returned is admin as false")
+        return {'isAdmin' : False}
         pass
 
     @jwt.token_in_blacklist_loader
