@@ -2,12 +2,13 @@ flask
 uwsgi
 flask-sqlalchemy
 flask-migrate
+flask-script
 flask-marshmallow
 flask-bcrypt 
 pyjwt
 psycopg2-binary
 flask-restful 
 flask-jwt-extended
-flask-migrate
 marshmallow-sqlalchemy
 flask_cors
+python-dotenv

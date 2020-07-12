@@ -1,5 +1,5 @@
 import datetime
-from flask.src.extentions import db, bcrypt
+from src.extentions import db, bcrypt
 
 
 class UserModel(db.Model):
@@ -24,10 +24,24 @@ class UserModel(db.Model):
     
     def __generate_hash(self, password):
         return bcrypt.generate_password_hash(password, rounds=10).decode("utf-8")
+    
+    def save_to_db(self) -> None:
+        db.session.add(self)
+        db.session.commit()
+    
+    @classmethod
+    def find_by_id(cls, _id : int) -> "UserModel":
+        user = cls.query.filter_by(id = _id).first()
+        return user
   
   # add this new method
     def check_hash(self, password):
         return bcrypt.check_password_hash(self.password, password)
+    
+    @classmethod
+    def find_by_username(cls, username : str) -> "UserModel":
+        user = cls.query.filter_by(username = username).first()
+        return user
     
 
 
