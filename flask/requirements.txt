@@ -12,3 +12,5 @@ flask-jwt-extended
 marshmallow-sqlalchemy
 flask_cors
 python-dotenv
+APScheduler
+requests

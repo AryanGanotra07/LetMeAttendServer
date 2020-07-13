@@ -6,18 +6,18 @@ import datetime
 # user_schema = UserSchema()
 # user_many_schema = UserSchema(many = True)
 _user_parser = reqparse.RequestParser()
-_user_parser.add_argument('username', 
+_user_parser.add_argument('id', 
     type = str, 
     required = True,
     help = "This field cannot be blank")
-_user_parser.add_argument('password', 
+_user_parser.add_argument('token', 
     type = str, 
     required = True,
     help = "This field cannot be blank")
-_user_parser.add_argument('email', 
-    type = str, 
-    required = False,
-    help = "This field can be blank for login")
+# _user_parser.add_argument('email', 
+#     type = str, 
+#     required = False,
+#     help = "This field can be blank for login")
 class UserLogin(Resource):
     @classmethod
     def get(cls):
@@ -54,15 +54,23 @@ class UserRegister(Resource):
         # if not claims['isAdmin']:
         #      return {'message' : 'Admin priviledge required'} , 401
         data = _user_parser.parse_args()
-        user = UserModel.find_by_username(data['username'])
-        if user is not None:
-            return {'message' : 'User with such username already exists'} , 400
-        user = UserModel(**data)
+        
+        
         # user = user_schema.load(data)
-        print(user)
-        user.save_to_db()
+        user = UserModel.find_by_id(data['id'])
+        if user is None:
+            user = UserModel(**data)
+            user.save_to_db()
 
-        return ({'message' : 'User created successfully.'}), 201
+        expires = datetime.timedelta(days=1)
+        access_token = create_access_token(identity=user.id, fresh = True,expires_delta=expires)
+        refresh_token = create_refresh_token(user.id)
+        # recents = UserModel.get_recent_accounts()
+        return {
+            'access_token' : access_token,
+            'refresh_token' : refresh_token,
+        }, 201
+        
 
 
     

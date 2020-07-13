@@ -8,6 +8,28 @@ from src.resources.User import UserLogin, UserRegister
 from dotenv import load_dotenv
 import os
 from src.config import app_config
+import time
+import atexit
+import requests
+import json 
+
+
+
+
+from apscheduler.schedulers.background import BackgroundScheduler
+
+def print_date_time():
+    url = "https://fcm.googleapis.com/fcm/send"
+
+    payload = "{\n    \"to\":\"dmEupn5NPnY:APA91bFaE9nCnWUZLW2o0fDmtBE3TLjpxN_6NcyFD8uFYhwhx7BQciFwMvjITTn4F5xClak05RkgOcJwUHwC79Bj0m4TL6bcOhh9hd_NjnR8wnIgNqcQZnPOVBkplhqiQDYJve3jLh5o\",\n      \"data\":{\"news_id\":\"5e808c920aa62a1dbd6ce3de\"}\n\n}"
+    headers = {
+    'Authorization': 'key=AAAA8OaMYk4:APA91bHWKNBxtPZ7nCwo1-p2ydPvnRgcgMer76Bzlh94B88I9R5cKpM4LCeJtkQx5qYCTs6Jxkv_74SWqH0h6AV9nhhOjNioKJdTlCnOyicFFkL3LOKDTExgvWG7X8FyrnygCfD-Nzo6',
+    'Content-Type': 'application/json'
+    }
+
+    response = requests.request("POST", url, headers=headers, data = payload)
+
+    print(response.text.encode('utf8'))
 
 def create_App():
     app = Flask(__name__)
@@ -20,18 +42,21 @@ def create_App():
     jwt = JWTManager(app)
     CORS(app)
     extensions(app)
+    scheduler = BackgroundScheduler()
+    scheduler.add_job(func=print_date_time, trigger="interval", seconds=59)
+    # scheduler.start()
     
 
-    @jwt.user_claims_loader
-    def add_claims_to_jwt(identity):
-        from .models.UserModel import UserModel
-        user = UserModel.find_by_id(identity)
-        if user.isAdmin:
-            print("returned is admin as true")
-            return {'isAdmin' : True}
-        print("returned is admin as false")
-        return {'isAdmin' : False}
-        pass
+    # @jwt.user_claims_loader
+    # def add_claims_to_jwt(identity):
+    #     from .models.UserModel import UserModel
+    #     user = UserModel.find_by_id(identity)
+    #     if user.isAdmin:
+    #         print("returned is admin as true")
+    #         return {'isAdmin' : True}
+    #     print("returned is admin as false")
+    #     return {'isAdmin' : False}
+    #     pass
 
     @jwt.token_in_blacklist_loader
     def check_if_token_in_blacklist(decrypted_token):
