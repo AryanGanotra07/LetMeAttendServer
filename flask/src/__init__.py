@@ -12,6 +12,7 @@ import time
 import atexit
 import requests
 import json 
+from src.models import UserModel, LectureModel, SubjectModel, AttendanceStatusModel, AttendanceModel
 
 
 

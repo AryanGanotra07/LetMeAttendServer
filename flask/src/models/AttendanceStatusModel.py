@@ -4,9 +4,9 @@ import datetime
 
 
 class AttendanceStatusModel(db.Model):
-    __tablename__ = "lectures"
+    __tablename__ = "attendancestatusmodel"
     id = db.Column(db.Integer, primary_key=True)
-    lect_id = db.Column(db.String(64), db.ForeignKey('lectures.id'))
+    lect_id = db.Column(db.Integer, db.ForeignKey('lectures.id'))
     status = db.Column(db.String(64), nullable = False)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
