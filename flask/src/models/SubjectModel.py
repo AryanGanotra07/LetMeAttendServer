@@ -1,6 +1,7 @@
 import datetime
 from src.extentions import db, bcrypt
 import datetime
+from typing import List
 
 
 class SubjectModel(db.Model):
@@ -21,4 +22,8 @@ class SubjectModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+
+    @classmethod
+    def get_all(cls) -> List["SubjectModel"] :
+        return SubjectModel.query.all()
         
