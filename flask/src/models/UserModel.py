@@ -6,13 +6,17 @@ class UserModel(db.Model):
     __tablename__ = "users"
     id = db.Column(db.String(64), primary_key=True)
     token = db.Column(db.String(256))
+    attendanceCriteria = db.Column(db.Integer, nullable = True)
+    subjects = db.relationship("Subject", backref="user", lazy='dynamic')
+    lectures = db.relationship("Lecture", backref="user", lazy='dynamic')
+    subjects = db.relationship("Attendance", backref="user", lazy='dynamic')
     # username = db.Column(db.String(128), nullable=False)
     # f_name = db.Column(db.String(128), nullable = True)
     # l_name = db.Column(db.String(128), nullable = True)
     # email = db.Column(db.String(128), unique=True, nullable=True)
     # password = db.Column(db.String(128), nullable=True)
-    # created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
-    # modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
+    created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
+    modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
     # isAdmin = db.Column(db.Boolean, nullable = False, default = False)
     # phone = db.Column(db.String(16), nullable = True)
 
@@ -26,6 +30,7 @@ class UserModel(db.Model):
     def __init__(self, id, token):
         self.id = id
         self.token = token
+
 
     
     def __generate_hash(self, password):
