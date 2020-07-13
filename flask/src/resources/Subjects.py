@@ -10,7 +10,7 @@ class SubjectsList(Resource):
     def get(cls):
         user_id = get_jwt_identity()
         if (user_id):
-            subjects = SubjectModel.get_all()
+            subjects = SubjectModel.get_all(user_id)
             return {
                 'subjects': subjects
             }
@@ -26,5 +26,5 @@ class Subject(Resource):
         #getSubjectDetails
         pass
     
-    
+
 

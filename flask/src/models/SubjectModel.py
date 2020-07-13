@@ -24,6 +24,10 @@ class SubjectModel(db.Model):
         db.session.commit()
 
     @classmethod
-    def get_all(cls) -> List["SubjectModel"] :
-        return SubjectModel.query.all()
+    def get_all(cls, user_id) -> List["SubjectModel"] :
+        return SubjectModel.query.filter_by(user_id=user_id).all()
+    
+    @classmethod
+    def get_subject_by_id(cls, id) -> "SubjectModel":
+        return SubjectModel.query.filter_by(id=id).first()
         
