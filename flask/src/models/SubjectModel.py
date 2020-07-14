@@ -10,10 +10,13 @@ class SubjectModel(db.Model):
     name = db.Column(db.String(100), nullable=False)
     color = db.Column(db.String(20), nullable=False)
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
-    lectures = db.relationship("Lecture", backref="subject", lazy='dynamic')
+    lectures = db.relationship("LectureModel", backref="subject", lazy='dynamic')
     created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
-    attendance = db.relationship("attendance", uselist=False, back_populates="subjects")
+    # attendance = db.relationship("AttendanceModel", uselist=False, back_populates="subjects")
+    # attendance_id = db.Column(db.Integer, db.ForeignKey('attendance.id'))
+    current_attendance = db.Column(db.Integer, default = 0)
+    total_attendance = db.Column(db.Integer, default = 0)
 
     def __init__(self, name, color):
         self.name = name

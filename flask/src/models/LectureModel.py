@@ -8,7 +8,7 @@ class LectureModel(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
     color = db.Column(db.String(20), nullable=False)
-    attendanceStatuses = db.relationship("AttendanceStatus", backref="lecture", lazy='dynamic')
+    attendanceStatuses = db.relationship("AttendanceStatusModel", backref="lecture", lazy='dynamic')
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
     sub_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))
     start_time = db.Column(db.DateTime, default = datetime.datetime.time)

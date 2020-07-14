@@ -5,6 +5,7 @@ from src.extentions import bcrypt, db, ma
 from flask_cors import CORS
 from src.blacklist import BLACKLIST
 from src.resources.User import UserLogin, UserRegister
+from src.resources.Subjects import Subject, SubjectsList
 from dotenv import load_dotenv
 import os
 from src.config import app_config
@@ -12,7 +13,7 @@ import time
 import atexit
 import requests
 import json 
-from src.models import UserModel, LectureModel, SubjectModel, AttendanceStatusModel, AttendanceModel
+from src.models import UserModel, LectureModel, SubjectModel, AttendanceStatusModel
 
 
 
@@ -75,6 +76,8 @@ def create_App():
         return "Hello from Aryan", 201
     api.add_resource(UserLogin, '/user/login')
     api.add_resource(UserRegister, '/user/register')
+    api.add_resource(Subject, '/subject')
+    api.add_resource(SubjectsList, '/subject/all')
     return app
 
 def extensions(app):

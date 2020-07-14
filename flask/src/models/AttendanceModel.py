@@ -9,7 +9,8 @@ class AttendanceModel(db.Model):
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
     current_attendance = db.Column(db.Integer, nullable = False)
     total_attendance = db.Column(db.Integer, nullable = False)
-    subject = db.relationship("subjects", uselist=False, back_populates="attendance")
+    subject = db.relationship("SubjectModel", uselist=False, back_populates="attendance")
+    #subject_id = db.Column(db.Integer, db.ForeignKey("subjects.id"))
     created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
 
