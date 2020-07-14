@@ -2,8 +2,10 @@ from flask_restful import Resource, reqparse
 from flask_jwt_extended import jwt_required, get_jwt_claims, create_access_token, create_refresh_token, get_jwt_identity
 from src.models.UserModel import UserModel
 from src.models.SubjectModel import SubjectModel
+from src.schema.SubjectSchema import SubjectSchema
 import datetime
 
+subject_schema = SubjectSchema(many = True)
 _subject_parser = reqparse.RequestParser()
 _subject_parser.add_argument('name', 
     type = str, 
@@ -24,7 +26,7 @@ class SubjectsList(Resource):
             subjects = SubjectModel.get_all(user_id)
             print(subjects)
             return {
-                'subjects': subjects
+                'subjects': subject_schema.dump(subjects)
             }
 
 class Subject(Resource):
@@ -44,7 +46,7 @@ class Subject(Resource):
                 return {"message" : "Subject successfully saved", "status" : 1}
             return {"message" : "User not found", "status" : 0}
 
-        return {"message" : "User not found or error in creating subject", "status" : 1}
+        return {"message" : "User not found or error in creating subject", "status" : 0}
         
     
     @classmethod

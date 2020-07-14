@@ -2,6 +2,7 @@ import datetime
 from src.extentions import db, bcrypt
 import datetime
 from typing import List
+# from src.models.LectureModel import LectureModel
 
 
 class SubjectModel(db.Model):
