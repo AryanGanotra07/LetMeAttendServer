@@ -1,4 +1,4 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from flask_jwt_extended import jwt_required, get_jwt_claims, create_access_token, create_refresh_token, get_jwt_identity
 from src.models.UserModel import UserModel
 import datetime
@@ -54,6 +54,7 @@ class UserRegister(Resource):
         # if not claims['isAdmin']:
         #      return {'message' : 'Admin priviledge required'} , 401
         data = _user_parser.parse_args()
+        print(data)
         
         
         # user = user_schema.load(data)
@@ -70,6 +71,38 @@ class UserRegister(Resource):
             'access_token' : access_token,
             'refresh_token' : refresh_token,
         }, 201
+    
+class User(Resource):
+    @classmethod
+    @jwt_required
+    def post(cls):
+        data = request.get_json()
+        print(data)
+        attendanceCriteria = data['attendanceCriteria']
+        if(attendanceCriteria is None):
+            return {"status" : 0, "message" : "Missing attribute - attendanceCriteria"}
+        user_id = get_jwt_identity()
+        if (user_id is None):
+            return {"status" : 0, "message" : "No user found"}
+        user = UserModel.find_by_id(user_id)
+        if user is None:
+            return {"status" : 0, "message" : "No user found"}
+        user.attendanceCriteria = attendanceCriteria
+        user.save_to_db()
+        return {"status" : 1, "message" : "Attendance field successfully added"}
+    
+    @classmethod
+    @jwt_required
+    def get(cls):
+        user_id = get_jwt_identity()
+        if (user_id is None):
+            return {"status" : 0, "message" : "No user found"}
+        user = UserModel.find_by_id(user_id)
+        if user is None:
+            return {"status" : 0, "message" : "No user found"}
+        return {"attendanceCriteria" : user.attendanceCriteria} 
+        
+
         
 
 

@@ -4,7 +4,7 @@ from flask_restful import Resource, Api
 from src.extentions import bcrypt, db, ma
 from flask_cors import CORS
 from src.blacklist import BLACKLIST
-from src.resources.User import UserLogin, UserRegister
+from src.resources.User import UserLogin, UserRegister, User
 from src.resources.Subjects import Subject, SubjectsList
 from src.resources.Lectures import Lecture, LectureList
 from dotenv import load_dotenv
@@ -77,10 +77,11 @@ def create_App():
         return "Hello from Aryan", 201
     api.add_resource(UserLogin, '/user/login')
     api.add_resource(UserRegister, '/user/register')
+    api.add_resource(User, '/user')
     api.add_resource(Subject, '/subject')
     api.add_resource(SubjectsList, '/subject/all')
     api.add_resource(Lecture, '/lecture/<int:sub_id>')
-    api.add_resource(LectureList, '/lecture/all/<int:sub_id>')
+    api.add_resource(LectureList, '/lecture/all')
 
     return app
 

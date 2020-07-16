@@ -25,9 +25,8 @@ class SubjectsList(Resource):
         if (user_id):
             subjects = SubjectModel.get_all(user_id)
             print(subjects)
-            return {
-                'subjects': subject_schema.dump(subjects)
-            }
+            return subject_schema.dump(subjects)
+            
 
 class Subject(Resource):
     @classmethod

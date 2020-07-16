@@ -4,6 +4,7 @@ from src.models.UserModel import UserModel
 from src.models.LectureModel import LectureModel
 from src.schema.LectureSchema import LectureSchema
 import datetime
+from flask import request
 
 lecture_schema = LectureSchema(many = True)
 _lecture_parser = reqparse.RequestParser()
@@ -33,10 +34,15 @@ class LectureList(Resource):
     # @jwt_required
     @classmethod
     @jwt_required
-    def get(cls, sub_id):
-        # user_id = get_jwt_identity()
+    def get(cls):
+        user_id = get_jwt_identity()
         # if (user_id):
-        lectures = LectureModel.get_all(sub_id)
+        day=request.args.get('day')
+        sub_id = request.args.get('sub_id')
+        if(day and day=='today'):
+            lectures = LectureModel.get_today_lectures(user_id)
+        else:
+            lectures = LectureModel.get_all(sub_id)
         print(lectures)
         return {
             'lectures': lecture_schema.dump(lectures)

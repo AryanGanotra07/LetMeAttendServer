@@ -29,10 +29,16 @@ class LectureModel(db.Model):
         db.session.commit()
     
     @classmethod
-    def get_all(cls, sub_id) -> List["SubjectModel"] :
+    def get_all(cls, sub_id) -> List["LectureModel"] :
         return LectureModel.query.filter_by(sub_id=sub_id).all()
     
     @classmethod
-    def get_lecture_by_id(cls, id) -> "SubjectModel":
+    def get_lecture_by_id(cls, id) -> "LectureModel":
         return LectureModel.query.filter_by(id=id).first()
+    
+    @classmethod
+    def get_today_lectures(cls, user_id) -> List["LectureModel"]:
+        weekday = datetime.datetime.today().weekday()
+        print(weekday)
+        return LectureModel.query.filter_by(user_id=user_id,day=weekday).all()
         
