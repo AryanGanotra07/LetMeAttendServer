@@ -41,12 +41,16 @@ class LectureList(Resource):
         sub_id = request.args.get('sub_id')
         if(day and day=='today'):
             lectures = LectureModel.get_today_lectures(user_id)
-        else:
+        elif (day and day in ["0","1","2","3","4","5","6"]):
+            print("Called")
+            lectures = LectureModel.get_lectures_by_day(user_id,day)
+        elif (sub_id):
             lectures = LectureModel.get_all(sub_id)
+        else:
+            lectures = LectureModel.get_all_by_user(user_id)
         print(lectures)
-        return {
-            'lectures': lecture_schema.dump(lectures)
-        }
+        return lecture_schema.dump(lectures)
+        
 
 class Lecture(Resource):
     @classmethod
