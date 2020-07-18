@@ -6,6 +6,7 @@ from src.schema.SubjectSchema import SubjectSchema
 import datetime
 
 subject_schema = SubjectSchema(many = True)
+subject_one_schema = SubjectSchema()
 _subject_parser = reqparse.RequestParser()
 _subject_parser.add_argument('name', 
     type = str, 
@@ -42,7 +43,7 @@ class Subject(Resource):
                 subject.user_id = user_id
                 subject.save_to_db()
                 # user.subjects.append(subject)
-                return {"message" : "Subject successfully saved", "status" : 1}
+                return subject_one_schema.dump(subject)
             return {"message" : "User not found", "status" : 0}
 
         return {"message" : "User not found or error in creating subject", "status" : 0}
