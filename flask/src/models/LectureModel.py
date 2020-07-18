@@ -8,7 +8,7 @@ class LectureModel(db.Model):
     __tablename__ = "lectures"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    color = db.Column(db.String(20), nullable=False)
+    color = db.Column(db.Integer, nullable=False)
     attendanceStatuses = db.relationship("AttendanceStatusModel", backref="lecture", lazy='dynamic')
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
     sub_id = db.Column(db.Integer, db.ForeignKey('subjects.id'))

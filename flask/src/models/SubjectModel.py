@@ -9,7 +9,7 @@ class SubjectModel(db.Model):
     __tablename__ = "subjects"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(100), nullable=False)
-    color = db.Column(db.String(20), nullable=False)
+    color = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
     lectures = db.relationship("LectureModel", backref="subject", lazy='dynamic')
     created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
@@ -26,6 +26,11 @@ class SubjectModel(db.Model):
     def save_to_db(self):
         db.session.add(self)
         db.session.commit()
+    @classmethod
+    def delete(cls,sub_id) -> None:
+        SubjectModel.query.filter_by(id = int(sub_id)).delete()
+        db.session.commit()
+        print("deleted")
 
     @classmethod
     def get_all(cls, user_id) -> List["SubjectModel"] :
