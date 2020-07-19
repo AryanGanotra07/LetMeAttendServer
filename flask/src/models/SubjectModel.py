@@ -12,7 +12,7 @@ class SubjectModel(db.Model):
     color = db.Column(db.Integer, nullable=False)
     user_id = db.Column(db.String(64), db.ForeignKey('users.id'))
     lectures = db.relationship("LectureModel", backref="subject", lazy='dynamic')
-    created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
+    created_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
     # attendance = db.relationship("AttendanceModel", uselist=False, back_populates="subjects")
     # attendance_id = db.Column(db.Integer, db.ForeignKey('attendance.id'))
@@ -34,7 +34,8 @@ class SubjectModel(db.Model):
 
     @classmethod
     def get_all(cls, user_id) -> List["SubjectModel"] :
-        return SubjectModel.query.filter_by(user_id=user_id).all()
+        print("Callsed")
+        return SubjectModel.query.filter_by(user_id=user_id).order_by(SubjectModel.created_at.desc()).all()
     
     @classmethod
     def get_subject_by_id(cls, id) -> "SubjectModel":
