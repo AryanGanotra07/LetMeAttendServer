@@ -4,6 +4,8 @@ from src.models.UserModel import UserModel
 from src.models.SubjectModel import SubjectModel
 from src.schema.SubjectSchema import SubjectSchema
 import datetime
+from src.models.LectureModel import LectureModel
+import json
 
 
 subject_schema = SubjectSchema(many = True)
@@ -32,6 +34,27 @@ class SubjectsList(Resource):
             subjects = SubjectModel.get_all(user_id)
             print(subjects)
             return subject_schema.dump(subjects)
+    @classmethod
+    @jwt_required
+    def post(cls):
+        user_id = get_jwt_identity()
+        json = request.get_json()
+        sub=SubjectModel(**json['subject'])
+        sub.user_id = user_id
+        sub.save_to_db()
+        print(sub.id)
+        lectureArray = json['lectures']
+        for lectureJson in lectureArray:
+            lecture = LectureModel(**lectureJson)
+            lecture.sub_id = sub.id
+            lecture.user_id = user_id
+            lecture.save_to_db()
+        print(subject_one_schema.dump(sub))
+        return subject_one_schema.dump(sub)
+
+        
+        
+
             
 
 class Subject(Resource):

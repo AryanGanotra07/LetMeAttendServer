@@ -77,6 +77,36 @@ class Lecture(Resource):
     def get(cls, id):
         #getSubjectDetails
         pass
+
+    @classmethod
+    @jwt_required
+    def delete(cls):
+        id = request.get_json()
+        print(id)
+        LectureModel.delete(id)
+        return {"message" : "lecture deleted successfully"}, 201
+    
+    @classmethod
+    @jwt_required
+    def put(cls):
+        data = _subject_parser.parse_args()
+        # user_id = get_jwt_identity()
+        # print(user_id)
+        lecture = LectureModel.get_subject_by_id(data['id'])
+        if (lecture):
+            if(data['start_time']):
+                lecture.start_time = data['start_time']
+            if(data['start_time']):
+                lecture.end_time = data['end_time']
+            lecture.save_to_db()
+            # user = UserModel.find_by_id(user_id)
+            # if user:
+            #     lecture.user_id = user_id
+            #     lecture.save_to_db()
+            #     # user.lectures.append(lecture)
+            return lecture_one_schema.dump(lecture)
+
+        return {"message" : "User not found or error in creating subject", "status" : 0}
     
 
 

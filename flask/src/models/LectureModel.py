@@ -36,6 +36,13 @@ class LectureModel(db.Model):
     @classmethod
     def get_lecture_by_id(cls, id) -> "LectureModel":
         return LectureModel.query.filter_by(id=id).first()
+
+    
+    @classmethod
+    def delete(cls,sub_id) -> None:
+        LectureModel.query.filter_by(id = int(sub_id)).delete()
+        db.session.commit()
+        print("deleted")
     
     @classmethod
     def get_today_lectures(cls, user_id) -> List["LectureModel"]:
