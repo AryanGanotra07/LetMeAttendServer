@@ -45,18 +45,24 @@ class LectureModel(db.Model):
         print("deleted")
     
     @classmethod
+    def delete_by_sub(cls,sub_id) -> None:
+        LectureModel.query.filter_by(sub_id = int(sub_id)).delete()
+        db.session.commit()
+        print("deleted")
+    
+    @classmethod
     def get_today_lectures(cls, user_id) -> List["LectureModel"]:
         weekday = datetime.datetime.today().weekday()
         print(weekday)
-        return LectureModel.query.filter_by(user_id=user_id,day=weekday).all()
+        return LectureModel.query.filter_by(user_id=user_id,day=weekday).order_by(LectureModel.start_time.desc()).all()
 
     @classmethod
     def get_lectures_by_day(cls,user_id,day)-> List["LectureModel"]:
-        return LectureModel.query.filter_by(user_id=user_id,day=day).all()
+        return LectureModel.query.filter_by(user_id=user_id,day=day).order_by(LectureModel.start_time.desc()).all()
     
     @classmethod
     def get_all_by_user(cls, user_id)-> List["LectureModel"] :
-        return LectureModel.query.filter_by(user_id=user_id).all()
+        return LectureModel.query.filter_by(user_id=user_id).order_by(LectureModel.start_time.desc()).all()
     
 
 

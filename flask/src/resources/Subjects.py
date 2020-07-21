@@ -87,6 +87,7 @@ class Subject(Resource):
     def delete(cls):
         id = request.get_json()
         print(id)
+        LectureModel.delete_by_sub(id)
         SubjectModel.delete(id)
         return {"message" : "subject deleted successfully"}, 201
     

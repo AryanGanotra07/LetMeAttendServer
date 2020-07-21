@@ -1,11 +1,11 @@
-from flask_restful import Resource, reqparse
+from flask_restful import Resource, reqparse, request
 from flask_jwt_extended import jwt_required, get_jwt_claims, create_access_token, create_refresh_token, get_jwt_identity
 from src.models.UserModel import UserModel
 from src.models.LectureModel import LectureModel
 from src.schema.LectureSchema import LectureSchema
 import datetime
-from flask import request
 
+lecture_one_schema = LectureSchema()
 lecture_schema = LectureSchema(many = True)
 _lecture_parser = reqparse.RequestParser()
 # _lecture_parser.add_argument('name', 
@@ -56,7 +56,7 @@ class Lecture(Resource):
     @classmethod
     @jwt_required
     def post(cls, sub_id):
-        data = _lecture_parser.parse_args()
+        data = request.get_json()
         user_id = get_jwt_identity()
         print(user_id)
         lecture = LectureModel(**data)
@@ -67,7 +67,7 @@ class Lecture(Resource):
                 lecture.sub_id = sub_id
                 lecture.save_to_db()
                 # user.subjects.append(subject)
-                return {"message" : "Lecture successfully saved", "status" : 1}
+                return lecture_one_schema.dump(lecture)
             return {"message" : "User not found", "status" : 0}
 
         return {"message" : "User not found or error in creating lecture", "status" : 0}
@@ -80,7 +80,7 @@ class Lecture(Resource):
 
     @classmethod
     @jwt_required
-    def delete(cls):
+    def delete(cls,sub_id):
         id = request.get_json()
         print(id)
         LectureModel.delete(id)
@@ -88,15 +88,16 @@ class Lecture(Resource):
     
     @classmethod
     @jwt_required
-    def put(cls):
-        data = _subject_parser.parse_args()
+    def put(cls, sub_id):
+        data = request.get_json()
+        print(data)
         # user_id = get_jwt_identity()
         # print(user_id)
-        lecture = LectureModel.get_subject_by_id(data['id'])
+        lecture = LectureModel.get_lecture_by_id(data['id'])
         if (lecture):
             if(data['start_time']):
                 lecture.start_time = data['start_time']
-            if(data['start_time']):
+            if(data['end_time']):
                 lecture.end_time = data['end_time']
             lecture.save_to_db()
             # user = UserModel.find_by_id(user_id)
