@@ -3,12 +3,14 @@ from flask_jwt_extended import jwt_required, get_jwt_claims, create_access_token
 from src.models.UserModel import UserModel
 from src.models.SubjectModel import SubjectModel
 from src.schema.SubjectSchema import SubjectSchema
+from src.schema.SubjectQuerySchema import SubjectQuerySchema
 import datetime
 from src.models.LectureModel import LectureModel
 import json
 
 
 subject_schema = SubjectSchema(many = True)
+subject_query_schema = SubjectQuerySchema(many = True)
 subject_one_schema = SubjectSchema()
 _subject_parser = reqparse.RequestParser()
 _subject_parser.add_argument('name', 
@@ -30,10 +32,14 @@ class SubjectsList(Resource):
     @jwt_required
     def get(cls):
         user_id = get_jwt_identity()
-        if (user_id):
+        q=request.args.get('q')
+        if (q is None and user_id):
             subjects = SubjectModel.get_all(user_id)
             print(subjects)
             return subject_schema.dump(subjects)
+        if (q is not None):
+            subjects = SubjectModel.get_all_by_name(q, user_id)
+            return subject_query_schema.dump(subjects)
     @classmethod
     @jwt_required
     def post(cls):

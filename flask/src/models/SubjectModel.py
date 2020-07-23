@@ -36,6 +36,11 @@ class SubjectModel(db.Model):
     def get_all(cls, user_id) -> List["SubjectModel"] :
         print("Callsed")
         return SubjectModel.query.filter_by(user_id=user_id).order_by(SubjectModel.created_at.desc()).all()
+
+    @classmethod
+    def get_all_by_name(cls,name, user_id) -> List["SubjectModel"] :
+        print("Callsed")
+        return SubjectModel.query.filter(SubjectModel.name.ilike(str(name)+'%'), SubjectModel.user_id==user_id).order_by(SubjectModel.created_at.desc()).all()
     
     @classmethod
     def get_subject_by_id(cls, id) -> "SubjectModel":
