@@ -7,6 +7,7 @@ from src.blacklist import BLACKLIST
 from src.resources.User import UserLogin, UserRegister, User
 from src.resources.Subjects import Subject, SubjectsList
 from src.resources.Lectures import Lecture, LectureList
+from src.resources.AttendanceStatuses import AttendanceStatus
 from dotenv import load_dotenv
 import os
 from src.config import app_config
@@ -87,6 +88,7 @@ def create_App():
     api.add_resource(SubjectsList, '/subject/all')
     api.add_resource(Lecture, '/lecture/<int:sub_id>')
     api.add_resource(LectureList, '/lecture/all')
+    api.add_resource(AttendanceStatus, '/attendance/<int:lect_id>')
 
     return app
 

@@ -14,6 +14,7 @@ class SubjectModel(db.Model):
     lectures = db.relationship("LectureModel", backref="subject", lazy='dynamic')
     created_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
+    
     # attendance = db.relationship("AttendanceModel", uselist=False, back_populates="subjects")
     # attendance_id = db.Column(db.Integer, db.ForeignKey('attendance.id'))
     current_attendance = db.Column(db.Integer, default = 0)
