@@ -63,6 +63,9 @@ class UserRegister(Resource):
         if user is None:
             user = UserModel(**data)
             user.save_to_db()
+        else:
+            user.token=data['token']
+            user.save_to_db()
 
         expires = datetime.timedelta(days=1)
         access_token = create_access_token(identity=user.id, fresh = True,expires_delta=expires)
