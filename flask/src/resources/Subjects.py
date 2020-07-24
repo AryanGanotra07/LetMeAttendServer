@@ -45,7 +45,19 @@ class SubjectsList(Resource):
     def post(cls):
         user_id = get_jwt_identity()
         json = request.get_json()
-        sub=SubjectModel(**json['subject'])
+        subject=json['subject']
+        if 'id' in subject:
+            sub=SubjectModel.get_subject_by_id(subject['id'])
+            lectureArray = json['lectures']
+            for lectureJson in lectureArray:
+                lecture = LectureModel(**lectureJson)
+                lecture.sub_id = sub.id
+                lecture.user_id = user_id
+                lecture.save_to_db()
+                print("id se")
+                return subject_one_schema.dump(sub)
+
+        sub=SubjectModel(**subject)
         sub.user_id = user_id
         sub.save_to_db()
         print(sub.id)

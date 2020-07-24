@@ -2,6 +2,8 @@ import datetime
 from src.extentions import db, bcrypt
 
 
+
+
 class UserModel(db.Model):
     __tablename__ = "users"
     id = db.Column(db.String(64), primary_key=True)
@@ -49,14 +51,16 @@ class UserModel(db.Model):
     def check_hash(self, password):
         return bcrypt.check_password_hash(self.password, password)
     
+
+
+    
     @classmethod
     def find_by_username(cls, username : str) -> "UserModel":
         user = cls.query.filter_by(username = username).first()
         return user
     
 
-
-        
+    
 
 
 

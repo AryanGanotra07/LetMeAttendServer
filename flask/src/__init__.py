@@ -19,12 +19,13 @@ from src.models import UserModel, LectureModel, SubjectModel, AttendanceStatusMo
 
 
 
+
 from apscheduler.schedulers.background import BackgroundScheduler
 
-def print_date_time():
+def send_notif(token):
     url = "https://fcm.googleapis.com/fcm/send"
 
-    payload = "{\n    \"to\":\"dmEupn5NPnY:APA91bFaE9nCnWUZLW2o0fDmtBE3TLjpxN_6NcyFD8uFYhwhx7BQciFwMvjITTn4F5xClak05RkgOcJwUHwC79Bj0m4TL6bcOhh9hd_NjnR8wnIgNqcQZnPOVBkplhqiQDYJve3jLh5o\",\n      \"data\":{\"news_id\":\"5e808c920aa62a1dbd6ce3de\"}\n\n}"
+    payload = "{\n    \"to\":\"fQsrbC_ZRsOlwBrhtRqDPZ:APA91bFw6HranJEzZs0c6Wgf9DktTmBMJhDz8oNq8yZXtuXidQha6-MGDsVBSlyiZ593z0_aGGMF-OHgkkQ5yupCqj3DVTh9PFrztzse7VlUeR3FCis7v2DYJAqvuzUPzKwiugFOuosL\",\n      \"data\":{\"news_id\":\"5e808c920aa62a1dbd6ce3de\"}\n\n}"
     headers = {
     'Authorization': 'key=AAAA8OaMYk4:APA91bHWKNBxtPZ7nCwo1-p2ydPvnRgcgMer76Bzlh94B88I9R5cKpM4LCeJtkQx5qYCTs6Jxkv_74SWqH0h6AV9nhhOjNioKJdTlCnOyicFFkL3LOKDTExgvWG7X8FyrnygCfD-Nzo6',
     'Content-Type': 'application/json'
@@ -33,6 +34,10 @@ def print_date_time():
     response = requests.request("POST", url, headers=headers, data = payload)
 
     print(response.text.encode('utf8'))
+
+def print_date_time():
+    send_notif("cWkPQ8ErQgahXTg1PSSPdl:APA91bGN7AdnxnWHvgh13OZ7WnsSnu_20kjTCvv_e7t6PnrKKyU4IinZCXUetzOltpIGNNLUL2kqT9GJ5qZaHiP8-LeiO__19hsXPlU7FI1yQy50xjKTDvWnYTZVn-5pI42diVz8rguJ")
+    
 
 def create_App():
     app = Flask(__name__)
@@ -45,9 +50,9 @@ def create_App():
     jwt = JWTManager(app)
     CORS(app)
     extensions(app)
-    scheduler = BackgroundScheduler()
-    scheduler.add_job(func=print_date_time, trigger="interval", seconds=59)
-    # scheduler.start()
+    # scheduler = BackgroundScheduler()
+    # scheduler.add_job(func=print_date_time, trigger="interval", seconds=9)
+    # #scheduler.start()
     
 
     # @jwt.user_claims_loader
@@ -89,6 +94,7 @@ def extensions(app):
   bcrypt.init_app(app) # add this line
 
   db.init_app(app) # add this line
+  
   ma.init_app(app)
   @app.before_first_request
   def create_tables():
@@ -98,4 +104,5 @@ def extensions(app):
     
 
 app = create_App()
+app.app_context().push()
     

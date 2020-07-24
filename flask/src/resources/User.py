@@ -55,7 +55,8 @@ class UserRegister(Resource):
         #      return {'message' : 'Admin priviledge required'} , 401
         data = _user_parser.parse_args()
         print(data)
-        
+        from src.resources.Task import execute
+        execute()
         
         # user = user_schema.load(data)
         user = UserModel.find_by_id(data['id'])
