@@ -6,6 +6,7 @@ from src.schema.SubjectSchema import SubjectSchema
 from src.schema.SubjectQuerySchema import SubjectQuerySchema
 import datetime
 from src.models.LectureModel import LectureModel
+from src.models.AttendanceStatusModel import AttendanceStatusModel
 import json
 
 
@@ -105,6 +106,7 @@ class Subject(Resource):
     def delete(cls):
         id = request.get_json()
         print(id)
+        AttendanceStatusModel.delete_by_sub(id)
         LectureModel.delete_by_sub(id)
         SubjectModel.delete(id)
         return {"message" : "subject deleted successfully"}, 201

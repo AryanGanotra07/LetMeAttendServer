@@ -2,7 +2,9 @@ from flask_restful import Resource, reqparse, request
 from flask_jwt_extended import jwt_required, get_jwt_claims, create_access_token, create_refresh_token, get_jwt_identity
 from src.models.UserModel import UserModel
 from src.models.LectureModel import LectureModel
+from src.models.SubjectModel import SubjectModel
 from src.schema.LectureSchema import LectureSchema
+from src.models.AttendanceStatusModel import AttendanceStatusModel
 import datetime
 
 lecture_one_schema = LectureSchema()
@@ -83,6 +85,22 @@ class Lecture(Resource):
     def delete(cls,sub_id):
         id = request.get_json()
         print(id)
+        statuses = AttendanceStatusModel.get_all(id)
+        if (len(statuses) > 0):
+            f_status = statuses[0]
+            subject = SubjectModel.get_subject_by_id(f_status.sub_id)
+            for status in statuses:
+                if (status.status == 'yes'):
+                    subject.current_attendance-=1
+                    subject.total_attendance-=1
+                    subject.save_to_db()
+                elif status.status == 'no':
+                    subject.total_attendance-=1
+                    subject.save_to_db()
+                    pass
+                elif status.status == 'cancel':
+                    pass
+        AttendanceStatusModel.delete_by_lect(id)
         LectureModel.delete(id)
         return {"message" : "lecture deleted successfully"}, 201
     
