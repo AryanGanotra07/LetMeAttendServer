@@ -3,6 +3,7 @@ from apscheduler.schedulers.background import BackgroundScheduler
 import requests
 from src.models.UserModel import UserModel
 from src.models.LectureModel import LectureModel
+from src.models.AttendanceStatusModel import AttendanceStatusModel
 from src import app
 import datetime
 executed = False
@@ -11,7 +12,7 @@ def send_notif(token, name, color, start_time, end_time, id, a_for):
     print(token)
     url = "https://fcm.googleapis.com/fcm/send"
 
-    payload = "{\n    \"to\":\""+token+"\",\n       \"data\":{\n        \"name\":\""+name+"\",\n  \"a_for\":\""+a_for+"\",\n       \"color\":\""+str(color)+"\",\n        \"start_time\":\""+start_time+"\",\n        \"end_time\":\""+end_time+"\",\n        \"id\":\""+str(id)+"\"\n        }\n\n}"
+    payload = "{\n    \"to\":\""+token+"\",\n       \"data\":{\n        \"name\":\""+name+"\",\n  \"a_for\":\""+str(a_for)+"\",\n       \"color\":\""+str(color)+"\",\n        \"start_time\":\""+start_time+"\",\n        \"end_time\":\""+end_time+"\",\n        \"id\":\""+str(id)+"\"\n        }\n\n}"
     headers = {
     'Authorization': 'key=AAAA8OaMYk4:APA91bHWKNBxtPZ7nCwo1-p2ydPvnRgcgMer76Bzlh94B88I9R5cKpM4LCeJtkQx5qYCTs6Jxkv_74SWqH0h6AV9nhhOjNioKJdTlCnOyicFFkL3LOKDTExgvWG7X8FyrnygCfD-Nzo6',
     'Content-Type': 'application/json'
@@ -27,7 +28,7 @@ def print_date_time():
         now = datetime.datetime.now()
         date = now.date()
         datestring = date.strftime("%d/%m/%Y")
-        lectures = LectureModel.query.filter(((LectureModel.last_marked == None) | (LectureModel.last_marked != date)) & (LectureModel.sent == False) &(LectureModel.day == weekday)).all()
+        lectures = LectureModel.query.filter(((LectureModel.last_marked == None) | (LectureModel.last_marked != date)) & ((LectureModel.sent == False) |  (LectureModel.last_sent < (datetime.datetime.now() - datetime.timedelta(hours=24)))) & (LectureModel.day == weekday)).all()
         hour = now.hour
         minute = now.minute
         # bf = now - datetime.timedelta(minutes=10)
@@ -40,8 +41,13 @@ def print_date_time():
             if (lnow == hour and abs(lmin-minute) <= 10):
                 user = UserModel.find_by_id(lecture.user_id)
                 lecture.sent = True
+                lecture.last_sent = datetime.datetime.now()
                 lecture.save_to_db()
-                send_notif(user.token, lecture.name, lecture.color, lecture.start_time, lecture.end_time, lecture.id, datestring)
+                status = AttendanceStatusModel(status="cancel", a_for=datestring)
+                status.lect_id = lecture.id
+                status.sub_id = lecture.sub_id
+                status.save_to_db()
+                send_notif(user.token, lecture.name, lecture.color, lecture.start_time, lecture.end_time, lecture.id, status.id)
         # users = UserModel.query.all()
         # print(users)
     # for user in users:

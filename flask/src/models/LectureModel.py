@@ -19,6 +19,7 @@ class LectureModel(db.Model):
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
     last_marked = db.Column(db.Date, default = None)
     sent = db.Column(db.Boolean, default = False)
+    last_sent = db.Column(db.DateTime, default = None)
 
     def __init__(self,name, color, start_time, end_time, day):
         self.name = name
