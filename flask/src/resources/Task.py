@@ -40,14 +40,15 @@ def print_date_time():
             lmin = st.minute
             if (lnow == hour and abs(lmin-minute) <= 10):
                 user = UserModel.find_by_id(lecture.user_id)
-                lecture.sent = True
-                lecture.last_sent = datetime.datetime.now()
-                lecture.save_to_db()
-                status = AttendanceStatusModel(status="cancel", a_for=datestring)
-                status.lect_id = lecture.id
-                status.sub_id = lecture.sub_id
-                status.save_to_db()
-                send_notif(user.token, lecture.name, lecture.color, lecture.start_time, lecture.end_time, lecture.id, status.id)
+                if user.login:
+                    lecture.sent = True
+                    lecture.last_sent = datetime.datetime.now()
+                    lecture.save_to_db()
+                    status = AttendanceStatusModel(status="cancel", a_for=datestring)
+                    status.lect_id = lecture.id
+                    status.sub_id = lecture.sub_id
+                    status.save_to_db()
+                    send_notif(user.token, lecture.name, lecture.color, lecture.start_time, lecture.end_time, lecture.id, status.id)
         # users = UserModel.query.all()
         # print(users)
     # for user in users:

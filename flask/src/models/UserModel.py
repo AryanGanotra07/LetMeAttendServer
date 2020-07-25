@@ -11,6 +11,7 @@ class UserModel(db.Model):
     attendanceCriteria = db.Column(db.Integer, nullable = True)
     subjects = db.relationship("SubjectModel", backref="user", lazy='dynamic')
     lectures = db.relationship("LectureModel", backref="user", lazy='dynamic')
+
     # attendences = db.relationship("AttendanceModel", backref="user", lazy='dynamic')
     # username = db.Column(db.String(128), nullable=False)
     # f_name = db.Column(db.String(128), nullable = True)
@@ -19,7 +20,7 @@ class UserModel(db.Model):
     # password = db.Column(db.String(128), nullable=True)
     created_at = db.Column(db.DateTime, default = datetime.datetime.now().date())
     modified_at = db.Column(db.DateTime, default = datetime.datetime.utcnow)
-    # isAdmin = db.Column(db.Boolean, nullable = False, default = False)
+    login = db.Column(db.Boolean, nullable = False, default = True)
     # phone = db.Column(db.String(16), nullable = True)
 
     # def __init__(self, username = None, phone = None, email = None, password = None, isAdmin = False):

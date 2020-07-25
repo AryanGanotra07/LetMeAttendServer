@@ -65,6 +65,7 @@ class UserRegister(Resource):
             user.save_to_db()
         else:
             user.token=data['token']
+            user.login = True
             user.save_to_db()
 
         expires = datetime.timedelta(days=1)
@@ -81,6 +82,16 @@ class User(Resource):
     @jwt_required
     def post(cls):
         data = request.get_json()
+        if ('logout' in data):
+            if (data['logout']):
+                user_id = get_jwt_identity()
+                if (user_id is None):
+                    return {"status" : 0, "message" : "No user found"}
+                user = UserModel.find_by_id(user_id)
+                user.login = False
+                user.save_to_db()
+                return {"message" : "logged in"}
+                
         print(data)
         attendanceCriteria = data['attendanceCriteria']
         if(attendanceCriteria is None):
