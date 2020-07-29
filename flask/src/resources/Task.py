@@ -24,25 +24,25 @@ def send_notif(token, name, color, start_time, end_time, id, a_for):
 
 def print_date_time():
     with app.app_context():
-        weekday = datetime.datetime.today().weekday()
-        now = datetime.datetime.now()
+        weekday = datetime.datetime.utcnow().date().weekday()
+        now = datetime.datetime.utcnow()
         date = now.date()
         datestring = date.strftime("%d/%m/%Y")
-        lectures = LectureModel.query.filter(((LectureModel.last_marked == None) | (LectureModel.last_marked != date)) & ((LectureModel.sent == False) |  (LectureModel.last_sent < (datetime.datetime.now() - datetime.timedelta(hours=24)))) & (LectureModel.day == weekday)).all()
+        lectures = LectureModel.query.filter(((LectureModel.last_marked == None) | (LectureModel.last_marked != date)) & ((LectureModel.sent == False) |  (LectureModel.last_sent < (datetime.datetime.utcnow() - datetime.timedelta(hours=24)))) & (LectureModel.day == weekday)).all()
         hour = now.hour
         minute = now.minute
         # bf = now - datetime.timedelta(minutes=10)
         # af = now + datetime.timedelta(minutes=10)
         for lecture in lectures:
             print(lecture.start_time)
-            st=datetime.datetime.strptime(lecture.start_time,'%H:%M:%S')
+            st=datetime.datetime.strptime(lecture.start_time,'%H:%M')
             lnow = st.hour
             lmin = st.minute
             if (lnow == hour and abs(lmin-minute) <= 10):
                 user = UserModel.find_by_id(lecture.user_id)
                 if user.login:
                     lecture.sent = True
-                    lecture.last_sent = datetime.datetime.now()
+                    lecture.last_sent = datetime.datetime.utcnow()
                     lecture.save_to_db()
                     status = AttendanceStatusModel(status="cancel", a_for=datestring)
                     status.lect_id = lecture.id
