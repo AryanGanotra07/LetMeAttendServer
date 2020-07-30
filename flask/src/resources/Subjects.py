@@ -121,6 +121,9 @@ class Subject(Resource):
         if (subject):
             if(data['name']):
                 subject.name = data['name']
+                for lecture in subject.lectures:
+                    lecture.name = data['name']
+                    lecture.save_to_db()
             subject.save_to_db()
             # user = UserModel.find_by_id(user_id)
             # if user:

@@ -29,6 +29,7 @@ def print_date_time():
         date = now.date()
         datestring = date.strftime("%d/%m/%Y")
         lectures = LectureModel.query.filter(((LectureModel.last_marked == None) | (LectureModel.last_marked != date)) & ((LectureModel.sent == False) |  (LectureModel.last_sent < (datetime.datetime.utcnow() - datetime.timedelta(hours=24)))) & (LectureModel.day == weekday)).all()
+        print("got lectures" + str(len(lectures)))
         hour = now.hour
         minute = now.minute
         # bf = now - datetime.timedelta(minutes=10)
